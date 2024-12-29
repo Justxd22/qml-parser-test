@@ -7,10 +7,10 @@ const pkg = require("../package.json");
 
 require("dotenv").config();
 
-const supportedPlatforms = ["darwin", "linux"];
+const supportedPlatforms = ["darwin", "linux", "win32"];
 
 function getBinaryUrl() {
-  const endpoint = "https://github.com/oltodo/qml-parser/releases/download";
+  const endpoint = "https://github.com/justxd22/qml-parser/releases/download";
   const version = semver.coerce(pkg.version);
   const { platform } = process;
 
@@ -18,8 +18,10 @@ function getBinaryUrl() {
     throw new Error(`Unsupported ${platform} platform.`);
   }
 
-  // https://github.com/oltodo/qml-parser/releases/download/v0.6.0/macos.zip
-  return `${endpoint}/v${version}/${platform}.zip`;
+  if (platform === "win32") {
+    return `${endpoint}/v${version}/windows.zip`;  // Windows binary
+  }
+  else return `${endpoint}/v${version}/${platform}.zip`;
 }
 
 (async function main() {
@@ -52,6 +54,12 @@ function getBinaryUrl() {
     if (process.platform === "darwin") {
       fs.symlinkSync(
         `qml-parser.app/Contents/MacOS/qml-parser`,
+        `${installPath}/qml-parser`
+      );
+    } else if (process.platform === "win32") {
+      // On Windows, ensure the binary is executable
+      fs.renameSync(
+        `${installPath}/qml-parser.exe`,
         `${installPath}/qml-parser`
       );
     }

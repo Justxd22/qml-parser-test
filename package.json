@@ -1,6 +1,6 @@
 {
-  "name": "@nbazille/qml-parser",
-  "version": "0.0.0",
+  "name": "qml-parser",
+  "version": "2.1.0",
   "description": "A QML parser to generate AST documents",
   "main": "src/index.js",
   "publishConfig": {
@@ -14,9 +14,9 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/oltodo/qml-parser.git"
+    "url": "git+https://github.com/justxd22/qml-parser.git"
   },
-  "author": "Nicolas Bazille <nicolas.bazille@m6.fr>",
+  "author": "Justxd22 <xdjust18@gmail.com>",
   "license": "MIT",
   "bin": {
     "qml-parser": "./vendor/qml-parser"
