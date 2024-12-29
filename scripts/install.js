@@ -27,7 +27,7 @@ function getBinaryUrl() {
 (async function main() {
   if (process.env.QML_PARSER_DISABLE_DOWNLOAD) {
     console.log(
-      '**INFO** Skipping binary download. "QML_PARSER_DISABLE_DOWNLOAD" environment variable was found.'
+      '[INFO] Skipping binary download. "QML_PARSER_DISABLE_DOWNLOAD" environment variable was found.'
     );
     return;
   }
@@ -35,14 +35,14 @@ function getBinaryUrl() {
   const binaryUrl = getBinaryUrl();
   const installPath = `${__dirname}/../vendor`;
 
-  console.log("**INFO** Downloading binary from", binaryUrl);
+  console.log("[INFO] Downloading binary from", binaryUrl);
 
   if (fs.existsSync(installPath)) {
-    console.log("**INFO** Removing existing installation...");
-    fs.rmdirSync(installPath, { recursive: true });
+    console.log("[INFO] Removing existing installation...");
+    fs.rmSync(installPath, { recursive: true });
   }
   fs.mkdirSync(installPath);
-  console.log("**INFO** Downloading and extracting...");
+  console.log("[INFO] Downloading and extracting...");
 
   const res = await fetch(binaryUrl);
 
@@ -56,7 +56,7 @@ function getBinaryUrl() {
   res.body.on("data", (chunk) => {
     downloaded += chunk.length;
     const percentage = ((downloaded / totalSize) * 100).toFixed(2);
-    process.stdout.write(`\r**INFO** Downloading... ${percentage}%`);
+    process.stdout.write(`\r[INFO] Downloading... ${percentage}%`);
   });
 
   await pipeline(res.body, unzipper.Extract({ path: installPath }));
