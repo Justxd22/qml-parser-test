@@ -1,6 +1,6 @@
 {
-  "name": "qml-parser",
-  "version": "2.1.0",
+  "name": "@justxd22/qml-parser",
+  "version": "2.1.2",
   "description": "A QML parser to generate AST documents",
   "main": "src/index.js",
   "publishConfig": {

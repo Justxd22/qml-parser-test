@@ -4,6 +4,7 @@ const semver = require("semver");
 const unzipper = require("unzipper");
 const { chmodSync } = require("fs-chmod");
 const pkg = require("../package.json");
+const { pipeline } = require("stream/promises");
 
 require("dotenv").config();
 
@@ -18,10 +19,9 @@ function getBinaryUrl() {
     throw new Error(`Unsupported ${platform} platform.`);
   }
 
-  if (platform === "win32") {
-    return `${endpoint}/v${version}/windows.zip`;  // Windows binary
-  }
-  else return `${endpoint}/v${version}/${platform}.zip`;
+  return platform === "win32"
+    ? `${endpoint}/v${version}/windows.zip`
+    : `${endpoint}/v${version}/${platform}.zip`;
 }
 
 (async function main() {
@@ -38,9 +38,11 @@ function getBinaryUrl() {
   console.log("**INFO** Downloading binary from", binaryUrl);
 
   if (fs.existsSync(installPath)) {
+    console.log("**INFO** Removing existing installation...");
     fs.rmdirSync(installPath, { recursive: true });
   }
   fs.mkdirSync(installPath);
+  console.log("**INFO** Downloading and extracting...");
 
   const res = await fetch(binaryUrl);
 
@@ -48,22 +50,22 @@ function getBinaryUrl() {
     throw new Error("Unable to fetch binaries");
   }
 
-  res.body.pipe(unzipper.Extract({ path: installPath }));
+  const totalSize = res.headers.get("content-length");
+  let downloaded = 0;
 
-  res.body.on("end", () => {
-    if (process.platform === "darwin") {
-      fs.symlinkSync(
-        `qml-parser.app/Contents/MacOS/qml-parser`,
-        `${installPath}/qml-parser`
-      );
-    } else if (process.platform === "win32") {
-      // On Windows, ensure the binary is executable
-      fs.renameSync(
-        `${installPath}/qml-parser.exe`,
-        `${installPath}/qml-parser`
-      );
-    }
-
-    chmodSync(`${installPath}/qml-parser`, "+x");
+  res.body.on("data", (chunk) => {
+    downloaded += chunk.length;
+    const percentage = ((downloaded / totalSize) * 100).toFixed(2);
+    process.stdout.write(`\r**INFO** Downloading... ${percentage}%`);
   });
+
+  await pipeline(res.body, unzipper.Extract({ path: installPath }));
+
+  if (process.platform === "darwin") {
+    fs.symlinkSync(
+      `qml-parser.app/Contents/MacOS/qml-parser`,
+      `${installPath}/qml-parser`
+    );
+  }
+  chmodSync(`${installPath}/qml-parser`, "+x");
 })();
