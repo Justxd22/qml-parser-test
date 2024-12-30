@@ -67,5 +67,7 @@ function getBinaryUrl() {
       `${installPath}/qml-parser`
     );
   }
+  if (process.platform !== "win32") {
   chmodSync(`${installPath}/qml-parser`, "+x");
+  }
 })();
