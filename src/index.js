@@ -1,47 +1,43 @@
-var execSync = require("child_process").execSync;
-var lz = require("lz-string");
-var os = require("os");
-const path = require("path");
+import { execSync } from 'child_process';
+import { platform } from 'os';
+import { join } from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
-
-require("dotenv").config();
-
-// const binPath = process.env.QML_PARSER_BIN_PATH || `${__dirname}/../vendor`;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 function getBinPath() {
-  switch (os.platform()) {
+  switch (platform()) {
     case "darwin":
-      return path.join(__dirname, "../vendor/Contents/MacOS/qml-parser");
+      return join(__dirname, "../vendor/Contents/MacOS/qml-parser");
     case "linux":
-      return path.join(__dirname, "../vendor/qml-parser");
+      return join(__dirname, "../vendor/qml-parser");
     case "win32":
-      return path.join(__dirname, "../vendor/qml-parser.exe");
+      return join(__dirname, "../vendor/qml-parser.exe");
     default:
-      throw new Error(`Unsupported ${os.platform()} platform.`);
+      throw new Error(`Unsupported ${platform()} platform.`);
   }
-}
-
-function execute(arg) {
-  var bin = getBinPath();
-  var result = execSync(bin + " " + arg, { maxBuffer: Infinity });
-  var ast = JSON.parse(result);
-
-  if (ast === null) {
-    return {};
-  }
-
-  return ast;
 }
 
 function parse(code) {
-  return execute(lz.compressToBase64(code));
+  const bin = getBinPath();
+  const result = execSync(bin, { 
+    input: code,
+    maxBuffer: Infinity 
+  });
+  const ast = JSON.parse(result);
+  return ast || {};
 }
 
 function parseFile(filepath) {
-  return execute(filepath);
+  const bin = getBinPath();
+  const result = execSync(`${bin} ${filepath}`, { maxBuffer: Infinity });
+  const ast = JSON.parse(result);
+  return ast || {};
 }
 
-module.exports = {
-  parse: parse,
-  parseFile: parseFile,
+export {
+  parse,
+  parseFile,
 };

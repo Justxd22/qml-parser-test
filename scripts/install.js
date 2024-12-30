@@ -1,12 +1,22 @@
-const fs = require("fs");
-const fetch = require("node-fetch");
-const semver = require("semver");
-const unzipper = require("unzipper");
-const { chmodSync } = require("fs-chmod");
-const pkg = require("../package.json");
-const { pipeline } = require("stream/promises");
+import fs from 'fs';
+import { chmod as chmodSync } from 'fs-chmod';
+import fetch from 'node-fetch';
+import semver from 'semver';
+import * as unzipper from 'unzipper';
+import { pipeline } from 'stream/promises';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+import * as dotenv from 'dotenv';
 
-require("dotenv").config();
+dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Read package.json for version
+const pkg = JSON.parse(
+  fs.readFileSync(join(__dirname, '..', 'package.json'), 'utf8')
+);
 
 const supportedPlatforms = ["darwin", "linux", "win32"];
 
@@ -24,7 +34,7 @@ function getBinaryUrl() {
     : `${endpoint}/v${version}/${platform}.zip`;
 }
 
-(async function main() {
+async function main() {
   if (process.env.QML_PARSER_DISABLE_DOWNLOAD) {
     console.log(
       '[INFO] Skipping binary download. "QML_PARSER_DISABLE_DOWNLOAD" environment variable was found.'
@@ -68,6 +78,8 @@ function getBinaryUrl() {
     );
   }
   if (process.platform !== "win32") {
-  chmodSync(`${installPath}/qml-parser`, "+x");
+    chmodSync(`${installPath}/qml-parser`, "+x");
   }
-})();
+}
+
+main();
