@@ -39,5 +39,11 @@ jobs:
         with:
           with-package: false
 
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: my-artifact
+          path: build/
+
 #      - run: yarn install
 #      - run: yarn jest
