@@ -35,6 +35,9 @@ bool Foobar::debug = true;
 void Foobar::setDebug(bool debug_) { Foobar::debug = debug_; }
 
 int Foobar::InternalRun(const QString &code) {
+  std::cout << "Input::\n";
+  std::cout << code.toStdString();
+  std::cout << "::End::\n";
   QQmlJS::Engine engine;
   QQmlJS::Lexer lexer(&engine);
 
@@ -82,6 +85,8 @@ Foobar::Foobar(Options options) { this->m_options = options; }
 
 int Foobar::Run(QStringList args) {
     QString code;
+try
+{
 
     if (args.count() > 1) {
         QTextStream(stderr) << "Please provide only one path or one QML text or use stdin.\n";
@@ -133,4 +138,12 @@ int Foobar::Run(QStringList args) {
     }
 
     return InternalRun(code);
+} catch (const std::exception &e) {
+    std::cerr << "Exception: " << e.what() << std::endl;
+    return 1;
+} catch (...) {
+    std::cerr << "Unknown exception occurred." << std::endl;
+    return 1;
+}
+
 }
