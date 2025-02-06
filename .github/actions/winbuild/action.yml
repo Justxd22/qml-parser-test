@@ -16,7 +16,7 @@ runs:
         run: |
           qmake CONFIG+=release
           nmake
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: qml-parser-windows
           path: dist\qml-parser.exe
