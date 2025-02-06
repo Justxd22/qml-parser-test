@@ -11,6 +11,7 @@ runs:
           allow-prereleases: false
 
       - name: Verify Python version
+        shell: cmd
         run: python --version
 
       - name: Setup Qt
