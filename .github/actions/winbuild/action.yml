@@ -10,9 +10,10 @@ runs:
           python-version: "3.12"
           allow-prereleases: false
 
-      - name: Verify Python version
-        shell: cmd
-        run: python --version
+      - name: Setup Visual Studio 2022
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
 
       - name: Setup Qt
         uses: jurplel/install-qt-action@v2
@@ -20,8 +21,15 @@ runs:
           version: 5.15.2
           modules: qtbase qttools qtdeclarative
           host: windows
-          target: desktop
+          # target: desktop
+          target: win64_msvc2019_64 
           setup-python: false
+
+      - name: Configure environment
+        shell: cmd
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          set PATH=%PATH%;C:\Qt\Tools\QtCreator\bin
 
       - name: Set up MSVC environment
         shell: cmd
