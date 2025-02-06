@@ -21,8 +21,8 @@ runs:
           version: 5.15.2
           modules: qtbase qttools qtdeclarative
           host: windows
-          # target: desktop
-          target: win64_msvc2019_64 
+          target: desktop
+          # target: win64_msvc2019_64 
           setup-python: false
 
       - name: Configure environment
