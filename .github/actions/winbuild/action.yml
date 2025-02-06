@@ -22,10 +22,16 @@ runs:
           host: windows
           target: desktop
           setup-python: false
+
+      - name: Set up MSVC environment
+        shell: cmd
+        run: |
+          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+
       - name: Build
         shell: cmd
         run: |
-          qmake CONFIG+=release
+          qmake
           nmake
       - uses: actions/upload-artifact@v4
         with:
