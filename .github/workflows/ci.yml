@@ -37,5 +37,5 @@ jobs:
       #     with-package: false
 
 
-      - run: yarn install
-      - run: yarn jest
+      - run: npm install
+      - run: npm test
