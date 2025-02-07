@@ -41,13 +41,8 @@ runs:
         run: |
           qmake
           nmake
-          windeployqt dist\qml-parser.exe -no-plugins -verbose=1
+          windeployqt dist\qml-parser.exe --no-compiler-runtime -no-plugins -verbose=1
       - uses: actions/upload-artifact@v4
         with:
           name: qml-parser-windows
           path: dist\
-          steps:
-
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-  
