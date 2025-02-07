@@ -39,3 +39,7 @@ jobs:
 
       - run: npm install
       - run: npm test
+
+      - name: Setup tmate session
+        if: ${{ failure() }}
+        uses: mxschmitt/action-tmate@v3
