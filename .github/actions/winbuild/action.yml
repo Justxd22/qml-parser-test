@@ -46,3 +46,8 @@ runs:
         with:
           name: qml-parser-windows
           path: dist\
+          steps:
+
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+  
