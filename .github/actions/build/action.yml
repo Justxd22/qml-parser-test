@@ -77,5 +77,5 @@ runs:
 
     - uses: actions/upload-artifact@v4
       with:
-        name: qml-parser
+        name: qml-parser-${{ runner.os }}
         path: dist/
