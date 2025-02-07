@@ -71,7 +71,7 @@ runs:
             mv dist/appdir/* dist
             rmdir dist/appdir
           else
-            macdeployqt dist/qml-parser.app -no-plugins -no-translations  -verbose=1
+            macdeployqt dist/qml-parser.app -no-plugins -verbose=1
           fi
         fi
 
