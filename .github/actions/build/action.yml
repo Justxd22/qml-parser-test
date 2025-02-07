@@ -67,11 +67,11 @@ runs:
           if [[ "$RUNNER_OS" == "Linux" ]]; then
             mkdir dist/appdir
             mv dist/qml-parser dist/appdir
-            linuxdeployqt dist/appdir/qml-parser -no-plugins -no-copy-copyright-files -no-compiler-runtime -no-translations 
+            linuxdeployqt dist/appdir/qml-parser -no-plugins -no-copy-copyright-files -no-translations 
             mv dist/appdir/* dist
             rmdir dist/appdir
           else
-            macdeployqt dist/qml-parser.app -no-plugins -no-compiler-runtime -no-translations  -verbose=1
+            macdeployqt dist/qml-parser.app -no-plugins -no-translations  -verbose=1
           fi
         fi
 
